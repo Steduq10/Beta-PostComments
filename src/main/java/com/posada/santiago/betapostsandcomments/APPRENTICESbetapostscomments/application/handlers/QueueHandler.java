@@ -26,8 +26,9 @@ public class QueueHandler implements Consumer<String> {
         String type = notification.getType().replace("alphapostsandcomments", "betapostsandcomments.APPRENTICESbetapostscomments");
         try {
             DomainEvent event = (DomainEvent) gson.fromJson(notification.getBody(), Class.forName(type));
+            useCase.accept(event);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
     }
