@@ -21,13 +21,14 @@ public class RabbitMqEventBus implements EventBus {
 
     @Override
     public void publishPost(PostViewModel postViewModel) {
-        var notification = new Notification(
+
+  /*      var notification = new Notification(
                 postViewModel.getClass().getTypeName(),
                 gson.toJson(postViewModel)
-        );
+        );*/
 
         rabbitTemplate.convertAndSend(
-                RabbitMqConfig.EXCHANGE, RabbitMqConfig.PROXY_ROUTING_KEY_POST_CREATED, notification.serialize().getBytes()
+                RabbitMqConfig.EXCHANGE, RabbitMqConfig.PROXY_ROUTING_KEY_POST_CREATED, gson.toJson(postViewModel).getBytes()
         );
         //Find a way to send this notification through the predefined queues in the rabbitMq configuration,
         //To that specific exchange and queues bases on the type of event
@@ -36,13 +37,9 @@ public class RabbitMqEventBus implements EventBus {
 
     @Override
     public void publishComment(CommentViewModel commentViewModel) {
-        var notification = new Notification(
-                commentViewModel.getClass().getTypeName(),
-                gson.toJson(commentViewModel)
-        );
 
         rabbitTemplate.convertAndSend(
-                RabbitMqConfig.EXCHANGE, RabbitMqConfig.PROXY_ROUTING_KEY_COMMENT_ADDED, notification.serialize().getBytes()
+                RabbitMqConfig.EXCHANGE, RabbitMqConfig.PROXY_ROUTING_KEY_COMMENT_ADDED, gson.toJson(commentViewModel).getBytes()
         );
         //Find a way to send this notification through the predefined queues in the rabbitMq configuration,
         //To that specific exchange and queues bases on the type of event
